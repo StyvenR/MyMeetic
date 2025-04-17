@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <title>Register</title>
+</head>
+
+<body class="bg-white">
+    <div class="flex items-center justify-center max-w-md mt-20 mx-auto">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">S'inscrire</h2>
+            <form action="../Controller/RegisterController.php" method="POST">
+                <div class="mb-4">
+                    <label for="firstname" class="block text-gray-700">Prénom</label>
+                    <input type="text" id="firstname" name="firstname"
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label for="lastname" class="block text-gray-700">Nom de famille</label>
+                    <input type="text" id="lastname" name="lastname"
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
+                </div>
+                <div class="mb-4" id="verifyAge">
+                    <label for="birthdate" class="block text-gray-700">Date de naissance</label>
+                    <input type="date" id="birthdate" name="birthdate" value=""
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label for="city" class="block text-gray-700">Ville</label>
+                    <input type="text" id="city" name="city"
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-gray-700">Email</label>
+                    <input type="email" id="email" name="email"
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
+                </div>
+                <div class="mb-4" id="verifyPassword">
+                    <label for="password" class="block text-gray-700">Mot de passe</label>
+                    <input type="password" id="password" name="password"
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm " required>
+                </div>
+                <div class="mb-4">
+                    <label for="confirm_password" class="block text-gray-700">Confirmer le mot de passe</label>
+                    <input type="password" id="confirm_password" name="confirm_password"
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm " required>
+                </div>
+                <div class="mb-4">
+                    <label for="gender" class="block text-gray-700">Genre</label>
+                    <select id="gender" name="gender"
+                        class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required>
+                        <option value="">Select Gender</option>
+                        <option value="Homme">Homme</option>
+                        <option value="Femme">Femme</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <a href="./LoginView.html" class="text-blue-600 hover:underline">Vous avez déjà un compte ?</a>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit"
+                        class="w-full bg-pink-500 text-white py-2 px-4 rounded-md hover:bg-pink-700">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm_password');
+        const birthdate = document.getElementById('birthdate');
+        const errorPassword = document.getElementById('verifyPassword');
+        const errorPasswordAdd = document.createElement('p');
+        const errorAge = document.getElementById('verifyAge');
+        const errorAgeAdd = document.createElement('p');
+        errorPasswordAdd.className = 'text-xs italic text-red-500';
+        errorPassword.appendChild(errorPasswordAdd);
+        errorAgeAdd.className = 'text-xs italic text-red-500';
+        errorAge.appendChild(errorAgeAdd);
+        form.addEventListener('submit', (event) => {
+            errorPasswordAdd.innerHTML = '';
+            errorAgeAdd.innerHTML = '';
+
+            if (password.value !== confirmPassword.value) {
+                errorPasswordAdd.innerHTML = 'Les mots de passe ne correspondent pas.';
+                event.preventDefault(); // Empeche l'envoie du formulaire
+                return;
+            }
+            if (password.value.length < 8) {
+                errorPasswordAdd.innerHTML = 'Le mot de passe doit contenir au moins 8 caractères.';
+                event.preventDefault();
+                return;
+            }
+            const birthDateValue = new Date(birthdate.value);
+            const today = new Date();
+            let age = today.getFullYear() - birthDateValue.getFullYear();
+            const monthDifference = today.getMonth() - birthDateValue.getMonth();
+
+            if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDateValue.getDate())) {
+                age--;
+            }
+
+            if (age < 18) {
+                errorAgeAdd.innerHTML = 'Vous devez avoir plus de 18 ans pour vous inscrire.';
+                event.preventDefault();
+            }
+        });
+    });
+</script>
+
+</html>
